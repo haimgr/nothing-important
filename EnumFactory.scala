@@ -1,4 +1,4 @@
-package game.entities
+package haimgr.util
 
 import scala.collection.SortedSet
 import scala.collection.immutable.BitSet
