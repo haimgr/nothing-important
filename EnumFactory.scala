@@ -7,9 +7,9 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by haim7 on 07 ספטמבר 2016.
   */
-abstract class EnumFactory {
+class EnumFactory protected() {
 
-  protected type Value <: EnumValue
+  type Value <: EnumValue
 
   private var _values = new ArrayBuffer[Value]
 
@@ -19,9 +19,9 @@ abstract class EnumFactory {
     values
   }
 
-  def Value(name: String) = new EnumValue(name)
+  protected def Value(name: String): Value = new EnumValue(name).asInstanceOf[Value]
 
-  protected class EnumValue (private val name: String)  {
+  protected class EnumValue protected[EnumFactory](private val name: String)  {
 
     val id: Int = _values.size
     _values += this.asInstanceOf[Value]
@@ -30,6 +30,8 @@ abstract class EnumFactory {
     final override def hashCode(): Int = id
 
     def +(that: Value): Set[Value] = new EnumSet(BitSet(this.id, that.id))
+
+    // def enumFactory: EnumFactory = EnumFactory.this
 
     override def toString: String = name
   }
@@ -45,17 +47,13 @@ abstract class EnumFactory {
 
     override def -(value: Value): Set[Value] = new EnumSet(bitSet - value.id)
 
-    override def iterator: Iterator[Value] = bitSet.iterator.take(size).map(values)
+    override def iterator: Iterator[Value] = bitSet.iterator.map(values)
 
-    override val size: Int = bitSet.size.min(values.size)
+    override val size: Int = bitSet.size
 
+  }
+  object EnumSet {
+    def empty: EnumSet = new EnumSet(BitSet.empty)
   }
 
 }
-object EnumFactory {
-  //def valuesOf[Factory <: EnumFactory](factory: Factory) = factory.values
-
-}
-/*object SimpleEnumFactory extends EnumFactory[_] {
-  def value(name: String): EnumValue =  new EnumValue(name) {}
-}*/
