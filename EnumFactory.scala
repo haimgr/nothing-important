@@ -52,10 +52,3 @@ abstract class EnumFactory {
   }
 
 }
-object EnumFactory {
-  //def valuesOf[Factory <: EnumFactory](factory: Factory) = factory.values
-
-}
-/*object SimpleEnumFactory extends EnumFactory[_] {
-  def value(name: String): EnumValue =  new EnumValue(name) {}
-}*/
